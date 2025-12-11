@@ -14,5 +14,8 @@ contract  SimpleDEX {
   uint public constant K = 0;
   uint public constant FEE = 300;
 
+  event LiquidityAdded(address indexed provider, uint amount0, uint amount1);
+  event LiquidityRemoved(address indexed provider, uint amount0, uint amount1);
+  event Swap(address indexed trader, uint amountIn, uint amountOut, bool isToken0);
   
 }
