@@ -17,5 +17,9 @@ contract  SimpleDEX {
   event LiquidityAdded(address indexed provider, uint amount0, uint amount1);
   event LiquidityRemoved(address indexed provider, uint amount0, uint amount1);
   event Swap(address indexed trader, uint amountIn, uint amountOut, bool isToken0);
-  
+
+  constructor(address _token0, address _token1) {
+    token0 = IERC20(_token0);
+    token1 = IERC20(_token1);
+  }
 }
