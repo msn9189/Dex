@@ -73,7 +73,7 @@ contract  SimpleDEX {
   function swap(uint amountIn, bool isToken0) external returns (uint amountOut) {
     uint oldK = reserve0 * reserve1;
     
-    uint amountInWithFee = (amountIn * (1000 - FEE)) / 10000;
+    uint amountInWithFee = (amountIn * (10000 - FEE)) / 10000;
 
     if(isToken0){
       amountOut = (reserve1 * amountInWithFee) / (reserve0 + amountInWithFee);
