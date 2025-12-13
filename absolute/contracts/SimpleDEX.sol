@@ -29,6 +29,7 @@ contract  SimpleDEX {
 
       reserve0 += amount0;
       reserve1 += amount1;
+      return;
     }
 
     uint amount1Optimal = (reserve1 * amount0) / reserve0;
