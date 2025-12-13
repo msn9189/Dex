@@ -33,8 +33,8 @@ contract  SimpleDEX {
       amount1 = amount1Desired;
     }
 
-    token0.transferFrom(msg.sender, address.(this), amount0);
-    token1.transferFrom(msg.sender, address.(this), amount1);
+    token0.transferFrom(msg.sender, address(this), amount0);
+    token1.transferFrom(msg.sender, address(this), amount1);
 
     reserve0 += amount0;
     reserve1 += amount1;
