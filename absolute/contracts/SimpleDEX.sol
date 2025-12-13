@@ -43,4 +43,19 @@ contract  SimpleDEX {
 
     emit LiquidityAdded(msg.sender, amount0, amount1);
   }
+
+  function removeLiquidity(uint amount0, uint amount1) external {
+    require(reserve0 * reserve1 == K, "Invariant violated");
+
+    token0.transfer(msg.sender, amount0);
+    token1.transfer(msg.sender, amount1);
+
+    reserve0 -= amount0;
+    reserve1 -= amount1;
+
+    K = reserve0 * reserve1;
+
+    emit LiquidityRemoved(msg.sender, amount0, amount1);
+    
+  }  
 }
