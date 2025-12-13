@@ -11,7 +11,6 @@ contract  SimpleDEX {
   uint public reserve0;
   uint public reserve1;
 
-  uint public constant K = 0;
   uint public constant FEE = 300;
 
   event LiquidityAdded(address indexed provider, uint amount0, uint amount1);
