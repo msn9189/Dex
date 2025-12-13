@@ -23,22 +23,23 @@ contract  SimpleDEX {
   }
 
   function addLiquidity(uint amount0Desired, uint amount1Desired) external returns (uint amount0, uint amount1) {
-    if (K > 0) {
-      uint amount1Optimal = (reserve1 * amount0Desired) / reserve0;
-      require(amount1Optimal <= amount1Desired, "Excess token1");
-      amount1 = amount1Optimal;
-    } else {
-      amount0 = amount0Desired;
-      amount1 = amount1Desired;
+    if (reserve0 == 0 && reserve1 == 0) {
+      token0.transferFrom(msg.sender, address(this), amount0);
+      token1.transferFrom(msg.sender, address(this), amount1);
+
+      reserve0 += amount0;
+      reserve1 += amount1;
+      return;
     }
 
+    uint amount1Optimal = (reserve1 * amount0) / reserve0;
+    require(amount1Optimal <= amount1, "Excess token1");
+
     token0.transferFrom(msg.sender, address(this), amount0);
-    token1.transferFrom(msg.sender, address(this), amount1);
-
+    token1.transferFrom(msg.sender, address(this), amount1Optimal);
     reserve0 += amount0;
-    reserve1 += amount1;
-
-    K = reserve0 * reserve1;
+    reserve1 += amount1Optimal;
+    
 
     emit LiquidityAdded(msg.sender, amount0, amount1);
   }
