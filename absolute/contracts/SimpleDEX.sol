@@ -58,4 +58,36 @@ contract  SimpleDEX {
     emit LiquidityRemoved(msg.sender, amount0, amount1);
     
   }  
+
+  function swap(uint amountIn, bool isToken0) external returns (uint amountOut) {
+    require(K > 0, "No liquidity");
+    
+    uint amountInWithFee = (amountIn * (1000 - FEE)) / 10000;
+
+    if(isToken0){
+      uint newReserve0 = reserve0 + amountIn;
+      amountOut = (reserve1 * amountInWithFee) / reserve0;
+      require(amountOut > 0, "Insufficient output");
+
+      token0.transferFrom(msg.sender, address(this), amountIn);
+      token1.transfer(msg.sender, amountOut);
+
+      reserve0 = newReserve0;
+      reserve1 -= amountOut;
+    } else {
+            uint newReserve1 = reserve1 + amountIn;
+            amountOut = (reserve0 * amountInWithFee) / reserve1;
+            require(amountOut > 0, "Insufficient output");
+            
+            token1.transferFrom(msg.sender, address(this), amountIn);
+            token0.transfer(msg.sender, amountOut);
+            
+            reserve1 = newReserve1;
+            reserve0 -= amountOut;
+    }
+
+    K = reserve0 * reserve1;
+
+    emit Swap(msg.sender, amountIn, amountOut, isToken0);
+  }
 }
