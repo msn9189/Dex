@@ -22,14 +22,13 @@ contract  SimpleDEX {
     token1 = IERC20(_token1);
   }
 
-  function addLiquidity(uint amount0Desired, uint amount1Desired) external returns (uint amount0, uint amount1) {
+  function addLiquidity(uint amount0, uint amount1) external {
     if (reserve0 == 0 && reserve1 == 0) {
       token0.transferFrom(msg.sender, address(this), amount0);
       token1.transferFrom(msg.sender, address(this), amount1);
 
       reserve0 += amount0;
       reserve1 += amount1;
-      return;
     }
 
     uint amount1Optimal = (reserve1 * amount0) / reserve0;
