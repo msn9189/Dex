@@ -29,6 +29,7 @@ contract  SimpleDEX {
 
       reserve0 += amount0;
       reserve1 += amount1;
+      emit LiquidityAdded(msg.sender, amount0, amount1);
       return;
     }
 
@@ -41,7 +42,7 @@ contract  SimpleDEX {
     reserve1 += amount1Optimal;
     
 
-    emit LiquidityAdded(msg.sender, amount0, amount1);
+    emit LiquidityAdded(msg.sender, amount0, amount1Optimal);
   }
 
   function removeLiquidity(uint amount0, uint amount1) external {
