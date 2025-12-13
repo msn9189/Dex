@@ -45,17 +45,28 @@ contract  SimpleDEX {
   }
 
   function removeLiquidity(uint amount0, uint amount1) external {
-    require(reserve0 * reserve1 == K, "Invariant violated");
+    require(amount0 > 0 || amount1 > 0, "Zero amount");
+    require(amount0 <= reserve0, "Insufficient reserve0");
+    require(amount1 <= reserve1, "Insufficient reserve1");
 
-    token0.transfer(msg.sender, amount0);
-    token1.transfer(msg.sender, amount1);
+    uint oldK = reserve0 * reserve1;
+
+    if(amount0 > 0){
+      token0.transfer(msg.sender, amount0);
+    }
+    if(amount1 > 0) {
+      token1.transfer(msg.sender, amount1);
+    }
 
     reserve0 -= amount0;
     reserve1 -= amount1;
 
-    K = reserve0 * reserve1;
+    uint newK = reserve0 * reserve1;
 
+    require(newK >= oldK * 99 / 100, "Too much slippage");
+    
     emit LiquidityRemoved(msg.sender, amount0, amount1);
+
     
   }  
 
