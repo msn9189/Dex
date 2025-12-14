@@ -77,26 +77,34 @@ contract  SimpleDEX {
   }  
 
   function swap(uint amountIn, bool isToken0) external returns (uint amountOut) {
+    require(reserve0 > 0 && reserve1 > 0, "Insufficient liquidity");
+    require(amountIn > 0, "Invalid amount");
+
     uint oldK = reserve0 * reserve1;
     
     uint amountInWithFee = (amountIn * (10000 - FEE)) / 10000;
 
     if(isToken0){
       amountOut = (reserve1 * amountInWithFee) / (reserve0 + amountInWithFee);
+      require(amountOut < reserve1, "Insufficient reservev1");
+
+      reserve0 += amountIn;
+      reserve1 -= amountOut;
 
       token0.transferFrom(msg.sender, address(this), amountIn);
       token1.transfer(msg.sender, amountOut);
 
-      reserve0 += amountIn;
-      reserve1 -= amountOut;
+      
     } else {
             amountOut = (reserve0 * amountInWithFee) / (reserve1 + amountInWithFee);
+            require(amountOut < reserve0, "Insufficient reserve0");
+
+            reserve1 += amountIn;
+            reserve0 -= amountOut;
 
             token1.transferFrom(msg.sender, address(this), amountIn);
             token0.transfer(msg.sender, amountOut);
             
-            reserve1 += amountIn;
-            reserve0 -= amountOut;
     }
 
     uint newK = reserve0 * reserve1;
