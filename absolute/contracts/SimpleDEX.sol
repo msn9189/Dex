@@ -50,21 +50,26 @@ contract  SimpleDEX {
     require(amount0 <= reserve0, "Insufficient reserve0");
     require(amount1 <= reserve1, "Insufficient reserve1");
 
-    uint oldK = reserve0 * reserve1;
 
-    if(amount0 > 0){
-      token0.transfer(msg.sender, amount0);
-    }
-    if(amount1 > 0) {
-      token1.transfer(msg.sender, amount1);
+    if(amount0 > 0 && amount1 > 0){
+      require(amount0 * reserve1 == amount1 * reserve0, "Must remove proportionally");
+    } else if(amount1 > 0) {
+      uint requiredAmount1 = (amount0 * reserve1) / reserve0;
+      require(requiredAmount1 == 0 || amount1 == requiredAmount1, "Must remove proportionally");
+    } else {
+      uint requiredAmount0 = (amount1 * reserve0) / reserve1;
+      require(requiredAmount0 == 0 || amount0 == requiredAmount0, "Must remove proportionally");
     }
 
     reserve0 -= amount0;
     reserve1 -= amount1;
 
-    uint newK = reserve0 * reserve1;
-
-    require(newK >= oldK * 99 / 100, "Too much slippage");
+    if(amount0 > 0) {
+      token0.transfer(msg.sender, amount0);
+    }
+    if(amount1 > 0) {
+      token1.transfer(msg.sender, amount1);
+    }
     
     emit LiquidityRemoved(msg.sender, amount0, amount1);
 
