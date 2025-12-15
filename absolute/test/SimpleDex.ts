@@ -33,4 +33,26 @@ async function deployMockToken(name: string, initialSupply: bigint) {
     await token.waitForDeployment();
     return token;
 }
-describe("SimpleDEX", function () {});
+describe("SimpleDEX", function () {
+    let dex: Contract;
+    let token0: Contract;
+    let owner: Wallet;
+    let user1: Wallet;
+    let user2: Wallet;
+
+    beforeEach(async function () {
+        const signers = await ethers.getSigners();
+        owner = signers[0] as Wallet;
+        user1 = signers[1] as Wallet;
+        user2 = signers[2] as Wallet;
+
+        const MockTokenFactory = await ethers.getContractFactory("MockERC20");
+
+        dex = await ethers.deployContract("SimpleDex", [
+            await token0.getAddress(),
+            await token1.getAddress(),
+        ]);
+        await dex.waitForDeployment();
+
+    });
+});
