@@ -67,4 +67,8 @@ describe("SimpleDEX", function () {
             expect(await dex.reserve1()).to.equal(0n);
         });        
     });
+
+    describe("addLiquidity", function () {
+        
+    });
 });
