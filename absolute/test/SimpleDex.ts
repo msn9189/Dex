@@ -55,4 +55,8 @@ describe("SimpleDEX", function () {
         await dex.waitForDeployment();
 
     });
+
+    describe("Constructor", function() {
+        
+    });
 });
