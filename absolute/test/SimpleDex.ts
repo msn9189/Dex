@@ -62,6 +62,9 @@ describe("SimpleDEX", function () {
             expect(await dex.token1()).to.equal(await token1.getAddress());
         });
 
-        
+        it("Should initialize reserves to zero", async function () {
+            expect(await dex.reserve0()).to.equal(0n);
+            expect(await dex.reserve1()).to.equal(0n);
+        });        
     });
 });
