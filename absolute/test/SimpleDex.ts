@@ -83,5 +83,29 @@ describe("SimpleDEX", function () {
           expect(await dex.reserve0()).to.equal(amount0);
           expect(await dex.reserve1()).to.equal(amount1);
         });
+
+        it("Should add subsequent liquidity proportionally", async function () {
+          // First liquidity
+          const initial0 = ethers.parseEther("100");
+          const initial1 = ethers.parseEther("200");
+
+          await token0.approve(await dex.getAddress(), initial0);
+          await token1.approve(await dex.getAddress(), initial1);
+          await dex.addLiquidity(initial0, initial1);
+
+          // Second liquidity - exact ratio
+          const amount0 = ethers.parseEther("50");
+          const amount1 = ethers.parseEther("100");
+
+          await token0.approve(await dex.getAddress(), amount0);
+          await token1.approve(await dex.getAddress(), amount1);
+
+          await expect(dex.addLiquidity(amount0, amount1))
+            .to.emit(dex, "LiquidityAdded")
+            .withArgs(owner.address, amount0, amount1);
+
+          expect(await dex.reserve0()).to.equal(initial0 + amount0);
+          expect(await dex.reserve1()).to.equal(initial1 + amount1);
+        });
     });
 });
