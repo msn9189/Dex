@@ -57,6 +57,11 @@ describe("SimpleDEX", function () {
     });
 
     describe("Constructor", function() {
+        it("Should set token0 and token1 correctly", async function() {
+            expect(await dex.token0()).to.equal(await token0.getAddress());
+            expect(await dex.token1()).to.equal(await token1.getAddress());
+        });
+
         
     });
 });
