@@ -325,6 +325,27 @@ describe("SimpleDEX", function () {
     });
 
     describe("Edge cases", function () {
-      
+      it("Should handle multiple swaps correctly", async function () {
+        // Add liquidity
+        const amount0 = ethers.parseEther("100");
+        const amount1 = ethers.parseEther("200");
+
+        await token0.approve(await dex.getAddress(), amount0);
+        await token1.approve(await dex.getAddress(), amount1);
+        await dex.addLiquidity(amount0, amount1);
+
+        // Multiple swaps
+        const swap1 = ethers.parseEther("10");
+        await token0.approve(await dex.getAddress(), swap1);
+        await dex.swap(swap1, true);
+
+        const swap2 = ethers.parseEther("5");
+        await token1.approve(await dex.getAddress(), swap2);
+        await dex.swap(swap2, false);
+
+        // Reserves should still be positive
+        expect(await dex.reserve0()).to.be.greaterThan(0n);
+        expect(await dex.reserve1()).to.be.greaterThan(0n);
+      });
     });
 });
