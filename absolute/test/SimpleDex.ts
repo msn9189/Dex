@@ -208,6 +208,14 @@ describe("SimpleDEX", function () {
     });
 
     describe("swap", function () {
-      
+      beforeEach(async function () {
+        // Add initial liquidity
+        const amount0 = ethers.parseEther("100");
+        const amount1 = ethers.parseEther("200");
+
+        await token0.approve(await dex.getAddress(), amount0);
+        await token1.approve(await dex.getAddress(), amount1);
+        await dex.addLiquidity(amount0, amount1);
+      });
     });
 });
