@@ -199,5 +199,11 @@ describe("SimpleDEX", function () {
           )
         ).to.be.revertedWith("Insufficient reserve0");
       });
+
+      it("Should revert if removing non-proportional amounts", async function () {
+        await expect(
+          dex.removeLiquidity(ethers.parseEther("50"), ethers.parseEther("50"))
+        ).to.be.revertedWith("Must remove proportionally");
+      });
     });
 });
