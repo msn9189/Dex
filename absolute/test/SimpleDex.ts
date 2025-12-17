@@ -165,5 +165,13 @@ describe("SimpleDEX", function () {
         await dex.addLiquidity(amount0, amount1);
       });
 
+      it("Should remove liquidity proportionally", async function () {
+        const remove0 = ethers.parseEther("50");
+        const remove1 = ethers.parseEther("100");
+
+        const balance0Before = await token0.balanceOf(owner.address);
+        const balance1Before = await token1.balanceOf(owner.address);
+        
+      });
     });
 });
