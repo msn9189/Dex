@@ -233,7 +233,24 @@ describe("SimpleDEX", function () {
         const reserve0After = await dex.reserve0();
         const reserve1After = await dex.reserve1();
 
-        
+        // Check reserves updated correctly
+        expect(reserve0After).to.equal(reserve0Before + amountIn);
+        expect(reserve1After).to.be.lessThan(reserve1Before);
+
+        // Check user received tokens
+        const amountOut = balance1After - balance1Before;
+        expect(amountOut).to.be.greaterThan(0n);
+
+        // Check event emitted
+        const event = receipt?.logs.find((log: any) => {
+          try {
+            const parsed = dex.interface.parseLog(log);
+            return parsed?.name === "Swap";
+          } catch {
+            return false;
+          }
+        });
+        expect(event).to.not.be.undefined;
       });
 
     });
