@@ -361,9 +361,22 @@ describe("SimpleDEX", function () {
         const amount0_2 = ethers.parseEther("50");
         const amount1_2 = ethers.parseEther("100");
 
-        await (token0.connect(user1) as ERC20Contract).approve(await dex.getAddress(), amount0_2);
-        await (token1.connect(user1)as ERC20Contract).approve(await dex.getAddress(), amount1_2);
-        await (dex.connect(user1)as SimpleDexContract).addLiquidity(amount0_2, amount1_2);
+        // Give user1 enough tokens
+        await(token0 as any).mint(user1.address, amount0_2);
+        await(token1 as any).mint(user1.address, amount1_2);
+
+        await(token0.connect(user1) as ERC20Contract).approve(
+          await dex.getAddress(),
+          amount0_2
+        );
+        await(token1.connect(user1) as ERC20Contract).approve(
+          await dex.getAddress(),
+          amount1_2
+        );
+        await(dex.connect(user1) as SimpleDexContract).addLiquidity(
+          amount0_2,
+          amount1_2
+        );
 
         expect(await dex.reserve0()).to.equal(ethers.parseEther("150"));
         expect(await dex.reserve1()).to.equal(ethers.parseEther("300"));
