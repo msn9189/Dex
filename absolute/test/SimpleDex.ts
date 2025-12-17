@@ -7,19 +7,7 @@ const { ethers } = await network.connect();
 
 
 
-async function deployMockToken(name: string, initialSupply: bigint) {
-    const factory = await ethers.getContractFactory("ERC20Mock");
-    const [deployer] = await ethers.getSigners();
 
-    const TokenFactory = await ethers.getContractFactory("MockERC20", {
-        libraries: {},
-    });
-
-    const token = await ethers.deployContract("MockERC20", [name, Symbol, initialSupply]);
-
-    await token.waitForDeployment();
-    return token;
-}
 describe("SimpleDEX", function () {
     let dex: Contract;
     let token0: Contract;
