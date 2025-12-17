@@ -253,5 +253,26 @@ describe("SimpleDEX", function () {
         expect(event).to.not.be.undefined;
       });
 
+      it("Should swap token1 for token0", async function () {
+        const amountIn = ethers.parseEther("20");
+        await token1.approve(await dex.getAddress(), amountIn);
+
+        const balance0Before = await token0.balanceOf(owner.address);
+        const reserve0Before = await dex.reserve0();
+        const reserve1Before = await dex.reserve1();
+
+        await dex.swap(amountIn, false);
+
+        const balance0After = await token0.balanceOf(owner.address);
+        const reserve0After = await dex.reserve0();
+        const reserve1After = await dex.reserve1();
+
+        expect(reserve1After).to.equal(reserve1Before + amountIn);
+        expect(reserve0After).to.be.lessThan(reserve0Before);
+
+        const amountOut = balance0After - balance0Before;
+        expect(amountOut).to.be.greaterThan(0n);
+      });
+
     });
 });
