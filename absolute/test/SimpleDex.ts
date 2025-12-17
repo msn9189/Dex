@@ -274,5 +274,17 @@ describe("SimpleDEX", function () {
         expect(amountOut).to.be.greaterThan(0n);
       });
 
+      it("Should maintain constant product invariant", async function () {
+        const amountIn = ethers.parseEther("10");
+        await token0.approve(await dex.getAddress(), amountIn);
+
+        const oldK = (await dex.reserve0()) * (await dex.reserve1());
+        await dex.swap(amountIn, true);
+        const newK = (await dex.reserve0()) * (await dex.reserve1());
+
+        // K should increase due to fees
+        expect(newK).to.be.greaterThanOrEqual(oldK);
+      });
+
     });
 });
