@@ -171,7 +171,18 @@ describe("SimpleDEX", function () {
 
         const balance0Before = await token0.balanceOf(owner.address);
         const balance1Before = await token1.balanceOf(owner.address);
-        
+
+        await expect(dex.removeLiquidity(remove0, remove1)).to.emit(dex, "LiquidityRemoved").withArgs(owner.address, remove0, remove1);
+
+        expect(await dex.reserve0()).to.equal(remove0);
+        expect(await dex.reserve1()).to.equal(remove1);
+
+        const balance0After = await token0.balanceOf(owner.address);
+        const balance1After = await token1.balanceOf(owner.address);
+
+        expect(balance0After - balance0Before).to.equal(remove0);
+        expect(balance1After - balance1Before).to.equal(remove1);
+
       });
     });
 });
