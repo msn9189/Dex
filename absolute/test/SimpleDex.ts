@@ -186,7 +186,7 @@ describe("SimpleDEX", function () {
       });
 
       it("Should revert if removing zero amounts", async function () {
-        await expect(dex.removeLiquidity(0, 0)).to.be.revertedWith(
+        await expect(dex.removeLiquidity(0n, 0n)).to.be.revertedWith(
           "Zero amount"
         );
       });
@@ -302,7 +302,7 @@ describe("SimpleDEX", function () {
       });
 
       it("Should revert if swapping zero amount", async function () {
-        await expect(dex.swap(0, true)).to.be.revertedWith("Invalid amount");
+        await expect(dex.swap(0n, true)).to.be.revertedWith("Invalid amount");
       });
 
       it("Should apply fee correctly (3%)", async function () {
