@@ -286,5 +286,20 @@ describe("SimpleDEX", function () {
         expect(newK).to.be.greaterThanOrEqual(oldK);
       });
 
+      it("Should revert if swapping with zero reserves", async function () {
+        // Remove all liquidity first
+        await dex.removeLiquidity(
+          ethers.parseEther("100"),
+          ethers.parseEther("200")
+        );
+
+        const amountIn = ethers.parseEther("10");
+        await token0.approve(await dex.getAddress(), amountIn);
+
+        await expect(dex.swap(amountIn, true)).to.be.revertedWith(
+          "Insufficient liquidity"
+        );
+      });
+
     });
 });
