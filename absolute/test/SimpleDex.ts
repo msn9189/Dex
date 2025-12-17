@@ -347,5 +347,26 @@ describe("SimpleDEX", function () {
         expect(await dex.reserve0()).to.be.greaterThan(0n);
         expect(await dex.reserve1()).to.be.greaterThan(0n);
       });
+
+      it("Should allow multiple users to add liquidity", async function () {
+        // First user adds liquidity
+        const amount0 = ethers.parseEther("100");
+        const amount1 = ethers.parseEther("200");
+
+        await token0.approve(await dex.getAddress(), amount0);
+        await token1.approve(await dex.getAddress(), amount1);
+        await dex.addLiquidity(amount0, amount1);
+
+        // Second user adds liquidity
+        const amount0_2 = ethers.parseEther("50");
+        const amount1_2 = ethers.parseEther("100");
+
+        await token0.connect(user1).approve(await dex.getAddress(), amount0_2);
+        await token1.connect(user1).approve(await dex.getAddress(), amount1_2);
+        await dex.connect(user1).addLiquidity(amount0_2, amount1_2);
+
+        expect(await dex.reserve0()).to.equal(ethers.parseEther("150"));
+        expect(await dex.reserve1()).to.equal(ethers.parseEther("300"));
+      });
     });
 });
