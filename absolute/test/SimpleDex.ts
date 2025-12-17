@@ -206,4 +206,8 @@ describe("SimpleDEX", function () {
         ).to.be.revertedWith("Must remove proportionally");
       });
     });
+
+    describe("swap", function () {
+      
+    });
 });
