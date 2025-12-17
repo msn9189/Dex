@@ -190,5 +190,14 @@ describe("SimpleDEX", function () {
           "Zero amount"
         );
       });
+
+      it("Should revert if removing more than reserves", async function () {
+        await expect(
+          dex.removeLiquidity(
+            ethers.parseEther("150"),
+            ethers.parseEther("100")
+          )
+        ).to.be.revertedWith("Insufficient reserve0");
+      });
     });
 });
