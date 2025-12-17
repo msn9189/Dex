@@ -5,12 +5,10 @@ import { Contract, Wallet } from "ethers";
 const { ethers } = await network.connect();
 
 
-
-
-
 describe("SimpleDEX", function () {
     let dex: Contract;
     let token0: Contract;
+    let token1: Contract;
     let owner: Wallet;
     let user1: Wallet;
     let user2: Wallet;
@@ -21,7 +19,20 @@ describe("SimpleDEX", function () {
         user1 = signers[1] as Wallet;
         user2 = signers[2] as Wallet;
 
-        const MockTokenFactory = await ethers.getContractFactory("MockERC20");
+        const MockToken = await ethers.getContractFactory("MockERC20");
+        token0 = await MockToken.deploy(
+          "Token0",
+          "TKN0",
+          ethers.parseEther("1000000")
+        );
+        await token0.waitForDeployment();
+
+        token1 = await MockToken.deploy(
+          "Token1",
+          "TKN1",
+          ethers.parseEther("1000000")
+        );
+        await token1.waitForDeployment();
 
         dex = await ethers.deployContract("SimpleDex", [
             await token0.getAddress(),
