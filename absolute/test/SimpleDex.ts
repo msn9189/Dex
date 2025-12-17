@@ -1,14 +1,23 @@
 import { expect } from "chai";
 import { network } from "hardhat";
-import { Contract, Wallet } from "ethers";
+import { BaseContract, Contract, Wallet } from "ethers";
 
 const { ethers } = await network.connect();
 
+type SimpleDexContract = BaseContract & {
+  token0(): Promise<string>;
+  token1(): Promise<string>;
+  reserve0(): Promise<bigint>;
+  reserve1(): Promise<bigint>;
+  addLiquidity(amount0: bigint, amount1: bigint): Promise<any>;
+  removeLiquidity(amount0: bigint, amount1: bigint): Promise<any>;
+  swap(amountIn: bigint, isToken0: boolean): Promise<any>;
+};
 
 describe("SimpleDEX", function () {
-    let dex: Contract;
-    let token0: Contract;
-    let token1: Contract;
+    let dex: SimpleDexContract;
+    let token0: BaseContract;
+    let token1: BaseContract;
     let owner: Wallet;
     let user1: Wallet;
     let user2: Wallet;
@@ -34,10 +43,10 @@ describe("SimpleDEX", function () {
         );
         await token1.waitForDeployment();
 
-        dex = await ethers.deployContract("SimpleDex", [
-            await token0.getAddress(),
-            await token1.getAddress(),
-        ]);
+        dex = (await ethers.deployContract("SimpleDEX", [
+          await token0.getAddress(),
+          await token1.getAddress(),
+        ])) as unknown as SimpleDexContract;; 
         await dex.waitForDeployment();
 
     });
