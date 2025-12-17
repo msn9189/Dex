@@ -301,5 +301,9 @@ describe("SimpleDEX", function () {
         );
       });
 
+      it("Should revert if swapping zero amount", async function () {
+        await expect(dex.swap(0, true)).to.be.revertedWith("Invalid amount");
+      });
+
     });
 });
