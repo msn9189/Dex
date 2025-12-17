@@ -14,10 +14,15 @@ type SimpleDexContract = BaseContract & {
   swap(amountIn: bigint, isToken0: boolean): Promise<any>;
 };
 
+type ERC20Contract = BaseContract & {
+  approve(spender: string, amount: bigint): Promise<any>;
+  balanceOf(account: string): Promise<bigint>;
+};
+
 describe("SimpleDEX", function () {
     let dex: SimpleDexContract;
-    let token0: BaseContract;
-    let token1: BaseContract;
+    let token0: ERC20Contract;
+    let token1: ERC20Contract;
     let owner: Wallet;
     let user1: Wallet;
     let user2: Wallet;
@@ -29,18 +34,18 @@ describe("SimpleDEX", function () {
         user2 = signers[2] as Wallet;
 
         const MockToken = await ethers.getContractFactory("MockERC20");
-        token0 = await MockToken.deploy(
+        token0 = (await MockToken.deploy(
           "Token0",
           "TKN0",
           ethers.parseEther("1000000")
-        );
+        )) as unknown as ERC20Contract;
         await token0.waitForDeployment();
 
-        token1 = await MockToken.deploy(
+        token1 = (await MockToken.deploy(
           "Token1",
           "TKN1",
           ethers.parseEther("1000000")
-        );
+        )) as unknown as ERC20Contract;
         await token1.waitForDeployment();
 
         dex = (await ethers.deployContract("SimpleDEX", [
