@@ -154,4 +154,8 @@ describe("SimpleDEX", function () {
           ).to.be.revertedWith("Excess token1");
         });
     });
+
+    describe("removeLiquidity", function () {
+      
+    });
 });
