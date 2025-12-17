@@ -323,4 +323,8 @@ describe("SimpleDEX", function () {
       });
 
     });
+
+    describe("Edge cases", function () {
+      
+    });
 });
