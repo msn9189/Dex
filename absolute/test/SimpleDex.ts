@@ -184,5 +184,11 @@ describe("SimpleDEX", function () {
         expect(balance1After - balance1Before).to.equal(remove1);
 
       });
+
+      it("Should revert if removing zero amounts", async function () {
+        await expect(dex.removeLiquidity(0, 0)).to.be.revertedWith(
+          "Zero amount"
+        );
+      });
     });
 });
