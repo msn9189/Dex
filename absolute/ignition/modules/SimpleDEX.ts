@@ -1,9 +1,7 @@
 import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
 
-export default buildModule("CounterModule", (m) => {
-  const counter = m.contract("Counter");
+export default buildModule("SimpleDEX", (m) => {
+  const SimpleDEX = m.contract("SimpleDEX");
 
-  m.call(counter, "incBy", [5n]);
-
-  return { counter };
+  return { SimpleDEX };
 });
