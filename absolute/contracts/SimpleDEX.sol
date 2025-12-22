@@ -27,8 +27,17 @@ contract  SimpleDEX {
     token1 = IERC20(_token1);
   }
 
+  /**
+   * @notice Adds liquidity to the pool
+   * If the pool is empty, deposits set both reserves directly.
+   * - otherwise, enforces correct ratio: amount1Optimal = (reserve1 * amount0) / reserve0
+   * and requires amount1 provided is at least that optimal amount; excess token1 will not be used.
+   * @param amount0 amount of token0 the caller wants to add
+   * @param amount1 Amount of token1 the caller wantsto add (may be adjusted to optimal)
+   */
   function addLiquidity(uint amount0, uint amount1) external {
     if (reserve0 == 0 && reserve1 == 0) {
+      // First provider sets the initial price; transfer tokens in full
       token0.transferFrom(msg.sender, address(this), amount0);
       token1.transferFrom(msg.sender, address(this), amount1);
 
@@ -38,9 +47,11 @@ contract  SimpleDEX {
       return;
     }
 
+    // calculate optimal amount1 to maintain current reserve ratio
     uint amount1Optimal = (reserve1 * amount0) / reserve0;
     require(amount1Optimal <= amount1, "Excess token1");
 
+    // transfer exact amount used
     token0.transferFrom(msg.sender, address(this), amount0);
     token1.transferFrom(msg.sender, address(this), amount1Optimal);
     reserve0 += amount0;
